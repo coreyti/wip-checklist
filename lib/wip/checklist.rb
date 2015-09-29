@@ -1,6 +1,6 @@
 require "wip/checklist/version"
 
-module Wip
+module WIP
   module Checklist
     # Your code goes here...
   end
