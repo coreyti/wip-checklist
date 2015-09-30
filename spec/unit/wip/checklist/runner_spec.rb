@@ -36,8 +36,8 @@ module WIP::Checklist
             Usage: wip-checklist COMMAND [options]
 
             Commands:
-                help                             help description
-                version                          version description
+                help                             Prints context-relevant help
+                version                          Prints version information
 
             Options:
                 -h, --help                       Prints help messages
