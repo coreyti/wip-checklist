@@ -25,11 +25,10 @@ module WIP
             opts.separator ""
             opts.separator "Commands:"
 
-            commands = [:help, :version]
-            commands.each do |name|
-              prefix  = "    #{name}"
-              padding = " " * (opts.summary_width - name.length + 1)
-              opts.separator [prefix, padding, "#{name} description"].join('')
+            commands.each do |command|
+              prefix  = "    #{command.title}"
+              padding = " " * (opts.summary_width - command.title.length + 1)
+              opts.separator [prefix, padding, command.description].join('')
             end
 
             opts.separator ""
@@ -48,6 +47,14 @@ module WIP
         def run(args)
           return help if args.empty?
           @opts.parse!(args)
+        end
+
+        private
+
+        def commands
+          @commands ||= begin
+            [:Help, :Version].map { |const| Commands.const_get(const) }
+          end
         end
       end
     end
