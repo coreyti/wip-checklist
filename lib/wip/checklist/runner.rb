@@ -42,7 +42,7 @@ module WIP
         handler = (command(args) || parser)
         handler.run(args)
       rescue UnknownCommandError
-        parser.help
+        Parser.new(io, 'wip-checklist').help
       end
 
       private

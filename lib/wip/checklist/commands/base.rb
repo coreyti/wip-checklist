@@ -22,7 +22,7 @@ module WIP
 
         def initialize(io)
           @io     = io
-          @parser = Parser.new(io, prefix, self.class.description)
+          @parser = self.class.const_get(:Parser).new(io, metadata)
         end
 
         def run(args = [])
@@ -35,6 +35,13 @@ module WIP
 
         def execute(args, options)
           raise NotImplementedError
+        end
+
+        def metadata
+          {
+            prelude:     prefix,
+            description: self.class.description
+          }
         end
 
         private
@@ -50,12 +57,12 @@ module WIP
         class Parser
           attr_reader :io
 
-          def initialize(io, prefix = nil, description = nil)
+          def initialize(io, metadata)
             @io   = io
             @opts = OptionParser.new do |opts|
-              opts.banner = "Usage: #{prefix} [options]"
+              opts.banner = "Usage: #{metadata[:prelude]} [options]"
 
-              if description
+              if description = metadata[:description]
                 opts.separator ""
                 opts.separator "Description:"
                 opts.separator "    #{description}"

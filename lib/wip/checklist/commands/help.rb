@@ -13,14 +13,20 @@ module WIP
         def command_parser(args)
           if args.empty?
             Runner::Parser.new(io, 'wip-checklist')
+            # Runner::Parser.new(io, metadata)
           else
-            Runner.command(args.first).const_get(:Parser).new(io)
+            command = Runner.command(args.first).new(io)
+            command.parser
           end
         end
 
         class Parser < Base::Parser
-          def initialize(io)
-            super(io, 'wip-checklist help', Help.description)
+          def initialize(io, metadata)
+            super
+
+            @opts.on("--example", "An example option") do
+              options.example = true
+            end
           end
         end
       end

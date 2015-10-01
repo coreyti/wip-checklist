@@ -29,6 +29,7 @@ module WIP::Checklist::Commands
                 Prints context-relevant help
 
             Options:
+                    --example                    An example option
                 -h, --help                       Prints help messages
           HELP
         end
@@ -43,6 +44,7 @@ module WIP::Checklist::Commands
                 Prints context-relevant help
 
             Options:
+                    --example                    An example option
                 -h, --help                       Prints help messages
           HELP
         end
