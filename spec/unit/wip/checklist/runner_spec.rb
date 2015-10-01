@@ -7,13 +7,13 @@ module WIP::Checklist
     describe '.command' do
       context 'when a registered Command is found' do
         around do |example|
-          Runner.register(:example, Commands::Base)
+          Runner.register(Support::ExampleCommand)
           example.run
-          Runner.deregister(:example)
+          Runner.deregister(Support::ExampleCommand)
         end
 
         it 'returns the Command implementation' do
-          expect(Runner.command(:example)).to be_a(Class)
+          expect(Runner.command('example-command')).to be_a(Class)
         end
       end
 
@@ -27,7 +27,7 @@ module WIP::Checklist
 
     describe '.commands' do
       it 'returns the list of registered Commands' do
-        registered      = Runner.commands.map(&:last)
+        registered      = Runner.commands
         implementations = Commands.constants(false).reject { |const| const == :Base }
 
         expect(registered.length).to eq(implementations.length)
@@ -39,11 +39,11 @@ module WIP::Checklist
 
     describe '.deregister' do
       before do
-        Runner.register(:example, Commands::Base)
+        Runner.register(Support::ExampleCommand)
       end
 
-      it 'adds to the list of registered Commands' do
-        expect { Runner.deregister(:example) }
+      it 'removes from the list of registered Commands' do
+        expect { Runner.deregister(Support::ExampleCommand) }
           .to change { Runner.commands.count }
           .by(-1)
       end
@@ -51,11 +51,11 @@ module WIP::Checklist
 
     describe '.register' do
       after do
-        Runner.deregister(:example)
+        Runner.deregister(Support::ExampleCommand)
       end
 
       it 'adds to the list of registered Commands' do
-        expect { Runner.register(:example, Commands::Base) }
+        expect { Runner.register(Support::ExampleCommand) }
           .to change { Runner.commands.count }
           .by(1)
       end
