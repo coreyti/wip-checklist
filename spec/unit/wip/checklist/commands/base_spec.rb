@@ -17,9 +17,16 @@ module WIP::Checklist::Commands
     end
 
     describe '#run' do
-      it 'raises an error' do
-        expect { command.run(nil) }
+      it 'executes (raising a NotImplementedError in this case)' do
+        expect { command.run }
           .to raise_error(NotImplementedError)
+      end
+
+      context 'given arguments as "--help"' do
+        it 'shows help' do
+          expect { command.run(['--help']) }
+            .to show("Usage: wip-checklist base [options]")
+        end
       end
     end
 
@@ -57,20 +64,21 @@ module WIP::Checklist::Commands
       end
 
       describe '#run' do
-        it 'returns parsed Options' do
-          expect(parser.run(['argument'])).to be_a(WIP::Checklist::Options)
-        end
-
-        context 'given empty arguments' do
-          it 'shows help' do
-            expect { parser.run }
-              .to show("Usage: wip-checklist base [options]")
-          end
+        it 'yields with parsed Options' do
+          expect { |b| parser.run(['argument'], &b) }
+            .to yield_with_args(WIP::Checklist::Options)
         end
 
         context 'given arguments as "--help"' do
           it 'shows help' do
             expect { parser.run(['--help']) }
+              .to show("Usage: wip-checklist base [options]")
+          end
+        end
+
+        context 'given arguments as "--bogus"' do
+          it 'shows help' do
+            expect { parser.run(['--bogus']) }
               .to show("Usage: wip-checklist base [options]")
           end
         end

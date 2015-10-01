@@ -22,16 +22,18 @@ module WIP
 
         def initialize(io)
           @io     = io
-          @parser = Parser.new(io, prefix)
+          @parser = Parser.new(io, prefix, self.class.description)
         end
 
-        def run(args)
-          execute(args)
+        def run(args = [])
+          parser.run(args) do |options|
+            execute(args, options)
+          end
         end
 
         protected
 
-        def execute(args)
+        def execute(args, options)
           raise NotImplementedError
         end
 
@@ -48,16 +50,22 @@ module WIP
         class Parser
           attr_reader :io
 
-          def initialize(io, prefix = nil)
+          def initialize(io, prefix = nil, description = nil)
             @io   = io
             @opts = OptionParser.new do |opts|
-              opts.banner  = "Usage: #{prefix} [options]"
+              opts.banner = "Usage: #{prefix} [options]"
+
+              if description
+                opts.separator ""
+                opts.separator "Description:"
+                opts.separator "    #{description}"
+              end
 
               opts.separator ""
               opts.separator "Options:"
 
-              opts.on_tail   "-h", "--help", "Prints help messages" do
-                io.say(opts)
+              opts.on_tail "-h", "--help", "Prints help messages" do
+                options.help = true
               end
             end
           end
@@ -66,11 +74,11 @@ module WIP
             io.say(@opts.help)
           end
 
-          def run(args = [])
-            return help if args.empty?
-
+          def run(args)
             @opts.parse!(args)
-            options
+            options.help ? help : (yield options)
+          rescue OptionParser::InvalidOption
+            help
           end
 
           private

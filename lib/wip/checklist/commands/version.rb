@@ -4,7 +4,7 @@ module WIP
       class Version < Base
         DESCRIPTION = "Prints version information"
 
-        def execute(args)
+        def execute(args, options)
           io.say("wip-checklist version #{WIP::Checklist::VERSION}")
         end
       end
