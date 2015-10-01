@@ -83,15 +83,29 @@ module WIP::Checklist
         end
       end
 
-      context 'given arguments with a Command name' do
-        context 'when the value matches a Command' do
+      context 'given command arguments' do
+        context 'as "version"' do
           it 'executes the Command' do
             expect { runner.run(['version']) }
               .to show("wip-checklist version #{WIP::Checklist::VERSION}")
           end
         end
 
-        context 'when the value does not match a Command' do
+        context 'as "help"' do
+          it 'executes the Command' do
+            expect { runner.run(['help']) }
+              .to show("Usage: wip-checklist COMMAND [options]")
+          end
+        end
+
+        context 'as "help version"' do
+          it 'executes the Command' do
+            expect { runner.run(['help', 'version']) }
+              .to show("Usage: wip-checklist version [options]")
+          end
+        end
+
+        context 'as "bogus"' do
           it 'shows help' do
             expect { runner.run(['bogus']) }
               .to show("Usage: wip-checklist COMMAND [options]")

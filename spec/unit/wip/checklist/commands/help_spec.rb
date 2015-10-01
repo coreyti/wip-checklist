@@ -5,9 +5,19 @@ module WIP::Checklist::Commands
     subject(:command) { Help.new(io) }
 
     describe '#run' do
-      it 'executes' do
-        expect { command.run(['argument']) }
-          .to show('HELP: ["argument"]')
+      context 'given no arguments' do
+        it 'executes' do
+          expect { command.run }.to show <<-HELP
+            Usage: wip-checklist COMMAND [options]
+
+            Commands:
+                help                             Prints context-relevant help
+                version                          Prints version information
+
+            Options:
+                -h, --help                       Prints help messages
+          HELP
+        end
       end
 
       context 'given arguments as "--help"' do
@@ -17,6 +27,34 @@ module WIP::Checklist::Commands
 
             Description:
                 Prints context-relevant help
+
+            Options:
+                -h, --help                       Prints help messages
+          HELP
+        end
+      end
+
+      context 'given arguments as "help"' do
+        it 'shows help' do
+          expect { command.run(['help']) }.to show <<-HELP
+            Usage: wip-checklist help [options]
+
+            Description:
+                Prints context-relevant help
+
+            Options:
+                -h, --help                       Prints help messages
+          HELP
+        end
+      end
+
+      context 'given arguments as "version`"' do
+        it 'shows help' do
+          expect { command.run(['version']) }.to show <<-HELP
+            Usage: wip-checklist version [options]
+
+            Description:
+                Prints version information
 
             Options:
                 -h, --help                       Prints help messages

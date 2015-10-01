@@ -48,11 +48,11 @@ module WIP
       private
 
       def command(args)
-        arguments = args.clone
-        candidate = arguments.shift
-        return nil if candidate.nil? || candidate.match(/^-/)
+        args.first.tap do |candidate|
+          return nil if candidate.nil? || candidate.match(/^-/)
+        end
 
-        self.class.command(candidate).new(io)
+        self.class.command(args.shift).new(io)
       end
 
       class Parser
