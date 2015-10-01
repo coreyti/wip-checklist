@@ -1,6 +1,32 @@
 module WIP
   module Checklist
     class Runner
+      class << self
+        @@commands = []
+
+        def command(name)
+          match = @@commands.find { |n, implementation| n == name.intern }
+
+          if match.nil?
+            raise UnknownCommandError.new("Command '#{name}' was not found")
+          end
+
+          match[1]
+        end
+
+        def commands
+          @@commands
+        end
+
+        def deregister(name)
+          @@commands.reject! { |n, _| n == name }
+        end
+
+        def register(name, implementation)
+          @@commands << [name, implementation]
+        end
+      end
+
       attr_reader :io, :parser
 
       def initialize(io = HighLine.new)
@@ -9,10 +35,21 @@ module WIP
       end
 
       def run(args = [])
-        parser.run(args)
+        handler = (command(args) || parser)
+        handler.run(args)
+      rescue UnknownCommandError
+        parser.help
       end
 
       private
+
+      def command(args)
+        arguments = args.clone
+        candidate = arguments.shift
+        return nil if candidate.nil? || candidate.match(/^-/)
+
+        self.class.command(candidate).new(io)
+      end
 
       class Parser
         attr_reader :io
@@ -25,10 +62,10 @@ module WIP
             opts.separator ""
             opts.separator "Commands:"
 
-            commands.each do |command|
-              prefix  = "    #{command.title}"
-              padding = " " * (opts.summary_width - command.title.length + 1)
-              opts.separator [prefix, padding, command.description].join('')
+            Runner.commands.each do |name, implementation|
+              term    = "    #{name}"
+              padding = " " * (opts.summary_width - name.length + 1)
+              opts.separator [term, padding, implementation.description].join('')
             end
 
             opts.separator ""
@@ -47,14 +84,6 @@ module WIP
         def run(args)
           return help if args.empty?
           @opts.parse!(args)
-        end
-
-        private
-
-        def commands
-          @commands ||= begin
-            [:Help, :Version].map { |const| Commands.const_get(const) }
-          end
         end
       end
     end
