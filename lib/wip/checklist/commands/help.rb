@@ -4,7 +4,7 @@ module WIP
       class Help < Base
         DESCRIPTION = "Prints context-relevant help"
 
-        def execute(args)
+        def execute(args, options)
           io.say("HELP: #{args.inspect}")
         end
       end

@@ -11,7 +11,7 @@ module Support
 
     protected
 
-    def execute(args)
+    def execute(args, options)
       @calls += 1
     end
   end
