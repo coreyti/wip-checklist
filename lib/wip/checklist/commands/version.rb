@@ -10,12 +10,7 @@ module WIP
 
         private
 
-        class Parser < Base::Parser
-          def initialize(io)
-            super(io, 'wip-checklist version', Version.description)
-            # super(io, Version.metadata)
-          end
-        end
+        class Parser < Base::Parser ; end
       end
     end
 
