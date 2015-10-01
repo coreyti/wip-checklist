@@ -7,6 +7,7 @@ require "wip/checklist/commands"
 
 module WIP
   module Checklist
-    # Your code goes here...
+    class Error < ::StandardError ; end
+    class UnknownCommandError < Error ; end
   end
 end

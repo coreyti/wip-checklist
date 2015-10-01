@@ -3,7 +3,13 @@ module WIP
     module Commands
       class Version < Base
         DESCRIPTION = "Prints version information"
+
+        def execute(args)
+          io.say("wip-checklist version #{WIP::Checklist::VERSION}")
+        end
       end
     end
+
+    Runner.register(:version, Commands::Version)
   end
 end
