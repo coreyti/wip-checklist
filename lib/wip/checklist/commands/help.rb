@@ -10,6 +10,6 @@ module WIP
       end
     end
 
-    Runner.register(:help, Commands::Help)
+    Runner.register(Commands::Help)
   end
 end

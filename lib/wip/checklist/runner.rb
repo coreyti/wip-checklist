@@ -5,25 +5,29 @@ module WIP
         @@commands = []
 
         def command(name)
-          match = @@commands.find { |n, implementation| n == name.intern }
+          match = @@commands.find do |implementation|
+            implementation.command == name.intern
+          end
 
           if match.nil?
             raise UnknownCommandError.new("Command '#{name}' was not found")
           end
 
-          match[1]
+          match
         end
 
         def commands
           @@commands
         end
 
-        def deregister(name)
-          @@commands.reject! { |n, _| n == name }
+        def deregister(implementation)
+          @@commands.reject! do |registered|
+            registered == implementation
+          end
         end
 
-        def register(name, implementation)
-          @@commands << [name, implementation]
+        def register(implementation)
+          @@commands << implementation
         end
       end
 
@@ -62,7 +66,8 @@ module WIP
             opts.separator ""
             opts.separator "Commands:"
 
-            Runner.commands.each do |name, implementation|
+            Runner.commands.each do |implementation|
+              name    = implementation.command
               term    = "    #{name}"
               padding = " " * (opts.summary_width - name.length + 1)
               opts.separator [term, padding, implementation.description].join('')

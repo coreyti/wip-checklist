@@ -10,6 +10,6 @@ module WIP
       end
     end
 
-    Runner.register(:version, Commands::Version)
+    Runner.register(Commands::Version)
   end
 end
