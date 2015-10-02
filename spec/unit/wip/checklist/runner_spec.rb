@@ -54,8 +54,11 @@ module WIP::Checklist
         Runner.deregister(Support::ExampleCommand)
       end
 
-      it 'adds to the list of registered Commands' do
-        expect { Runner.register(Support::ExampleCommand) }
+      it 'adds to the list of registered Commands (once)' do
+        expect {
+          Runner.register(Support::ExampleCommand)
+          Runner.register(Support::ExampleCommand)
+        }
           .to change { Runner.commands.count }
           .by(1)
       end
@@ -123,6 +126,7 @@ module WIP::Checklist
             Usage: wip-checklist COMMAND [options]
 
             Commands:
+                console                          Starts a REPL console session
                 help                             Prints context-relevant help
                 version                          Prints version information
 

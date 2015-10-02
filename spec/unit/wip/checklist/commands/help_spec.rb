@@ -11,6 +11,7 @@ module WIP::Checklist::Commands
             Usage: wip-checklist COMMAND [options]
 
             Commands:
+                console                          Starts a REPL console session
                 help                             Prints context-relevant help
                 version                          Prints version information
 
