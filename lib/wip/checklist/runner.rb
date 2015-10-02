@@ -1,8 +1,10 @@
+require "set"
+
 module WIP
   module Checklist
     class Runner
       class << self
-        @@commands = []
+        @@commands = Set.new
 
         def command(name)
           match = @@commands.find do |implementation|
@@ -17,7 +19,7 @@ module WIP
         end
 
         def commands
-          @@commands
+          @@commands.sort { |a, b| a.name <=> b.name }
         end
 
         def deregister(implementation)
