@@ -21,19 +21,16 @@ module WIP
         private
 
         def start
-          # indent = io.indent_level
+          io.indent_size = 4
 
           loop do
             begin
-              entry = read("→  ")
+              entry = read("→   ")
               io.indent_level += 1
               result = process(entry)
               io.indent_level -= 1
-              return 0 if (result && result.exit?)
             end
           end
-
-          return -1
         end
 
         def process(entry)

@@ -5,9 +5,10 @@ module WIP
     class Runner
       class << self
         @@commands = Set.new
+        @@special  = Set.new
 
         def command(name)
-          match = @@commands.find do |implementation|
+          match = (@@commands + @@special).find do |implementation|
             implementation.command == name.intern
           end
 
@@ -18,8 +19,12 @@ module WIP
           match
         end
 
-        def commands
-          @@commands.sort { |a, b| a.name <=> b.name }
+        def commands(special = false)
+          if special
+            @@special
+          else
+            @@commands.sort { |a, b| a.name <=> b.name }
+          end
         end
 
         def deregister(implementation)
@@ -28,8 +33,8 @@ module WIP
           end
         end
 
-        def register(implementation)
-          @@commands << implementation
+        def register(implementation, special = false)
+          (special ? @@special : @@commands) << implementation
         end
       end
 
